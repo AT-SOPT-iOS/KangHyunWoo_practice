@@ -8,68 +8,62 @@ import UIKit
 
 import SnapKit
 
-class CollectionViewController : UIViewController, UICollectionViewDelegate, UICollectionViewDataSource{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return itemData.count // 더미데이터의 수
-    }
+final class CollectionViewController: UIViewController {
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCollectionViewCell.identifier, for: indexPath) as? ItemCollectionViewCell else { return UICollectionViewCell() }
-                cell.dataBind(itemData[indexPath.item]) // 현재 indexPath에 해당하는 데이터를 셀에 바인딩
-                return cell
-    }
-    
-    
+
     final let carrotLineSpacing: CGFloat = 10
     final let carrotInterItemSpacing: CGFloat = 21
     final let cellHeight: CGFloat = 198
     final let carrotInset = UIEdgeInsets(top: 49, left: 20, bottom: 10, right: 20)
     
+
     private var itemData = ItemModel.dummy()
     
+
     private func calculateCellHeight() -> CGFloat {
         let count = CGFloat(itemData.count)
         let heightCount = count / 2 + count.truncatingRemainder(dividingBy: 2)
         return heightCount * cellHeight + (heightCount - 1) * carrotLineSpacing + carrotInset.top + carrotInset.bottom
     }
-    
+
     private let collectionView : UICollectionView = {
-            let layout = UICollectionViewFlowLayout()
-            
-            let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-            return collectionView
-        }()
+        let layout = UICollectionViewFlowLayout()
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        return collectionView
+    }()
     
     override func viewDidLoad() {
-            super.viewDidLoad()
-            
-            self.view.backgroundColor = .white
-            
-            setLayout()
-            register()
-            setDelegate()
-        }
+        super.viewDidLoad()
+        
+        self.view.backgroundColor = .white
+        
+        setLayout()
+        register()
+        setDelegate()
+    }
+    
     private func setLayout() {
-            self.view.addSubview(collectionView)
-            
-            collectionView.snp.makeConstraints {
-                $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
-                $0.height.equalTo(calculateCellHeight())
-            }
-        }
+        self.view.addSubview(collectionView)
         
-        private func register() {
-            collectionView.register(
-                ItemCollectionViewCell.self,
-                forCellWithReuseIdentifier: ItemCollectionViewCell.identifier
-            )
+        collectionView.snp.makeConstraints {
+            $0.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
+            $0.height.equalTo(calculateCellHeight())
         }
-        
-        private func setDelegate() {
-            collectionView.delegate = self
-            collectionView.dataSource = self
-        }
+    }
+    
+    private func register() {
+        // CollectionView에 Cell 등록
+        collectionView.register(
+            ItemCollectionViewCell.self,
+            forCellWithReuseIdentifier: ItemCollectionViewCell.identifier
+        )
+    }
+    private func setDelegate() {
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
 }
+
 extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let screenWidth = UIScreen.main.bounds.width
@@ -87,5 +81,17 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         return carrotInset
+    }
+}
+
+extension CollectionViewController: UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return itemData.count
+    }
+
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ItemCollectionViewCell.identifier, for: indexPath) as? ItemCollectionViewCell else { return UICollectionViewCell() }
+        cell.dataBind(itemData[indexPath.item])
+        return cell
     }
 }
