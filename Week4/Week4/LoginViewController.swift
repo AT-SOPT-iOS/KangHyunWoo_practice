@@ -141,7 +141,7 @@ final class LoginViewController: UIViewController {
         $0.addTarget(self,
                      action: #selector(registerButtonTap),
                      for: .allEvents)
-        $0.backgroundColor = .blue
+        $0.backgroundColor = .green
         $0.setTitle("회원가입", for: .normal)
         $0.titleLabel?.textColor = .white
     }
@@ -157,7 +157,7 @@ final class LoginViewController: UIViewController {
 //        $0.addTarget(self,
 //                     action: #selector(infoViewButtonTap),
 //                     for: .touchUpInside)
-        $0.backgroundColor = .blue
+        $0.backgroundColor = .purple
         $0.setTitle("회원정보 조회", for: .normal)
         $0.titleLabel?.textColor = .white
     }
